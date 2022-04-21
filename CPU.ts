@@ -25,6 +25,10 @@ export class CPU implements ICPU {
 
 	public pc: number;
 
+	private _flag = {
+		STOP: false,
+	};
+
 	private _debug: TCPUConfig = {
 		enable: false,
 		showStack: true,
@@ -45,7 +49,7 @@ export class CPU implements ICPU {
 	}
 
 	public execute(program: Uint8Array): void {
-		while (this.pc >= 0 && this.pc < program.length) {
+		while (!this._flag.STOP && this.pc < program.length) {
 			this._beforeExecuteInstruction();
 
 			this._executeInstruction(program);
@@ -57,7 +61,7 @@ export class CPU implements ICPU {
 	private _executeInstruction(instructions: Uint8Array): void {
 		switch (instructions[this.pc]) {
 			case OPCODE.STOP: {
-				this.pc = -1;
+				this._flag.STOP = true;
 				break;
 			}
 
