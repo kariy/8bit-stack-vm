@@ -17,20 +17,21 @@ export class Memory {
 		return this.buffer[0];
 	}
 
-	store(offset: number, value: Uint8Array): void {
-		this.checkOffsetInRange(offset);
+	store(offset: Uint8Array, value: Uint8Array): void {
+		const _offset = offset[0];
+		this.checkOffsetInRange(_offset);
 
-		this.buffer.writeUint8(value[0], offset);
+		this.buffer.writeUint8(value[0], _offset);
 
 		const _nextUnusedCell = this.buffer[this.ap];
 
-		if (offset > _nextUnusedCell) this.buffer[this.ap] = offset + 1;
+		if (_offset > _nextUnusedCell) this.buffer[this.ap] = _offset + 1;
 	}
 
-	load(offset: number): Uint8Array {
-		this.checkOffsetInRange(offset);
-
-		return new Uint8Array([this.buffer[offset]]);
+	load(offset: Uint8Array): Uint8Array {
+		const _offset = offset[0];
+		this.checkOffsetInRange(_offset);
+		return new Uint8Array([this.buffer[_offset]]);
 	}
 
 	private checkOffsetInRange(offset: number): void {
